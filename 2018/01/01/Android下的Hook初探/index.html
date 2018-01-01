@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android下的Hook初探 | Banyan&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Android XC_LoadPackageposed Hook">
+<meta name="keywords" content="Hook,Xposed,Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android下的Hook初探">
+<meta property="og:url" content="http://yoursite.com/2018/01/01/Android下的Hook初探/index.html">
+<meta property="og:site_name" content="Banyan&#39;Blog">
+<meta property="og:description" content="Android XC_LoadPackageposed Hook">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="http://img.blog.csdn.net/20180101193933357?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20180101201442965?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20180101204622033?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20180101205029838?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20180101213751524?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-01T14:06:59.264Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android下的Hook初探">
+<meta name="twitter:description" content="Android XC_LoadPackageposed Hook">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20180101193933357?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+  
+    <link rel="alternative" href="/atom.xml" title="Banyan&#39;Blog" type="application/atom+xml">
+  
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">Banyan</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">让学习成为一种习惯</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/works">作品展示</a></li>
+                        
+                            <li><a href="/about">留言打卡</a></li>
+                        
+                            <li><a href="/FrontEndGuide">前端导航</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/Banyantoo" title="github">github</a>
+                            
+                                <a class="fl zhihu" target="_blank" href="https://www.zhihu.com/people/banyan-51/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl weibo" target="_blank" href="https://weibo.com/u/5037099559" title="weibo">weibo</a>
+                            
+                                <a class="fl twitter" target="_blank" href="https://twitter.com/Banyantoo" title="twitter">twitter</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/CVE-2017-17562/" style="font-size: 10px;">CVE-2017-17562</a> <a href="/tags/Hook/" style="font-size: 10px;">Hook</a> <a href="/tags/PWN/" style="font-size: 10px;">PWN</a> <a href="/tags/WriteUp/" style="font-size: 10px;">WriteUp</a> <a href="/tags/Xposed/" style="font-size: 10px;">Xposed</a> <a href="/tags/漏洞/" style="font-size: 10px;">漏洞</a> <a href="/tags/逆向/" style="font-size: 10px;">逆向</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://Banyan.github.io/">Banyan</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">一个热爱信息安全的dog</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">Banyan</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">Banyan</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">让学习成为一种习惯</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/works">作品展示</a></li>
+                
+                    <li><a href="/about">留言打卡</a></li>
+                
+                    <li><a href="/FrontEndGuide">前端导航</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/Banyantoo" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/banyan-51/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="weibo" target="_blank" href="https://weibo.com/u/5037099559" title="weibo">weibo</a>
+                    
+                        <a class="twitter" target="_blank" href="https://twitter.com/Banyantoo" title="twitter">twitter</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-Android下的Hook初探" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/01/Android下的Hook初探/" class="article-date">
+      <time datetime="2018-01-01T14:04:19.298Z" itemprop="datePublished">2018-01-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android下的Hook初探
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Hook/">Hook</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hook/">Hook</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Xposed/">Xposed</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>Android XC_LoadPackageposed Hook</p>
+<a id="more"></a>
+<h1 id="1丶Android下的常用Hook框架"><a href="#1丶Android下的常用Hook框架" class="headerlink" title="1丶Android下的常用Hook框架"></a><strong>1丶Android下的常用Hook框架</strong></h1><blockquote>
+<h4 id="android下的Hook框架有很多，比较出名的就是Xposed和Cydia-Substrate-当然都各有不足，Xposed只能Hook-Java层，面对native层就显得无力了；Substrate和Java层和native层都可以Hook，但作者好像很久没更新了，只能在dalvik上Hook，在android5-0及以上版本就不能用了，而且兼容性也不是很好，在几款模拟器上都没配置成功。"><a href="#android下的Hook框架有很多，比较出名的就是Xposed和Cydia-Substrate-当然都各有不足，Xposed只能Hook-Java层，面对native层就显得无力了；Substrate和Java层和native层都可以Hook，但作者好像很久没更新了，只能在dalvik上Hook，在android5-0及以上版本就不能用了，而且兼容性也不是很好，在几款模拟器上都没配置成功。" class="headerlink" title="android下的Hook框架有很多，比较出名的就是Xposed和Cydia Substrate,当然都各有不足，Xposed只能Hook Java层，面对native层就显得无力了；Substrate和Java层和native层都可以Hook，但作者好像很久没更新了，只能在dalvik上Hook，在android5.0及以上版本就不能用了，而且兼容性也不是很好，在几款模拟器上都没配置成功。"></a>android下的Hook框架有很多，比较出名的就是<font size="6" color="#0099ff" face="黑体">Xposed</font>和<font size="6" color="#0099ff" face="黑体">Cydia Substrate</font>,当然都各有不足，Xposed只能Hook Java层，面对native层就显得无力了；Substrate和Java层和native层都可以Hook，但作者好像很久没更新了，只能在dalvik上Hook，在android5.0及以上版本就不能用了，而且兼容性也不是很好，在几款模拟器上都没配置成功。</h4><p>####当然还有其它一些和新出的hook框架也是不错的，就不一一介绍了，下面给出Hook 框架的项目地址</p>
+</blockquote>
+<p><strong>Xposed：</strong><a href="https://github.com/rovo89/Xposed%20Xposed" target="_blank" rel="noopener">https://github.com/rovo89/Xposed</a><br><strong>Cydia Substrate官网：</strong><a href="http://www.cydiasubstrate.com/" target="_blank" rel="noopener">http://www.cydiasubstrate.com/</a><br><strong>Android Inline Hook：</strong><a href="https://github.com/ele7enxxh/Android-Inline-Hook" target="_blank" rel="noopener">https://github.com/ele7enxxh/Android-Inline-Hook</a><br><strong>StormHook:Android侵入式Java Hook框架：</strong><a href="https://github.com/woxihuannisja/StormHook" target="_blank" rel="noopener">https://github.com/woxihuannisja/StormHook</a><br><strong>免RootHook框架：</strong><a href="https://github.com/asLody/legend" target="_blank" rel="noopener">https://github.com/asLody/legend</a><br><strong>基于VirtualApp和YAHFA的免RootHook框架：</strong><a href="https://github.com/rk700/VirtualHook" target="_blank" rel="noopener">https://github.com/rk700/VirtualHook</a></p>
+<p>#<strong>2丶Xposed框架的使用-进入Java的世界</strong></p>
+<p>##环境：<br>开发工具：Android studio3.0.1<br>运行环境：Genymotion模拟器，系统安卓4.4.4<br>Xposed版本：v2.7<br>XposedBridgeApi版本：v54<br>注意：Android 5.0以下Xposed版本用v2.7，Android5.0用v3.+</p>
+<p>##实验目的<br>二个app，一个点击按钮获取imei，另一个完成Hook系统imie操作</p>
+<p>##操作步骤</p>
+<p>###①在Android studio中新建个Poriect，删除掉原有的app module，新建一个名为hook和一个名为getImei的module<br><img src="http://img.blog.csdn.net/20180101193933357?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>###②用getImei实现获取imei的功能<br><strong>添加权限：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_PHONE_STATE&quot;/&gt;</span><br></pre></td></tr></table></figure></p>
+<p><strong>layout:</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">"com.banyan.imei.MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/textView1"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:textSize</span>=<span class="string">"20dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"获取到的imei值为："</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_marginTop</span>=<span class="string">"18dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/button1"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"获取imei"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Activity：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.banyan.imei;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.telephony.TelephonyManager;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.Button;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Button button1;</span><br><span class="line">    <span class="keyword">private</span> TextView textView1;</span><br><span class="line">    <span class="keyword">private</span> TelephonyManager tm;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        button1 = findViewById(R.id.button1);</span><br><span class="line">        textView1 = findViewById(R.id.textView1);</span><br><span class="line"></span><br><span class="line">        tm = (TelephonyManager) <span class="keyword">this</span>.getSystemService(TELEPHONY_SERVICE);</span><br><span class="line">        button1.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                <span class="comment">//获取imei</span></span><br><span class="line">                String imei = tm.getDeviceId();</span><br><span class="line">                <span class="comment">//设置文本框的内容为获取的imei</span></span><br><span class="line">                textView1.setText(<span class="string">"获取到的imei值为："</span>);</span><br><span class="line">                textView1.setText(textView1.getText() + imei);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>运行效果如下：</strong><br><img src="http://img.blog.csdn.net/20180101201442965?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>因为是模拟器，这imei有点奇怪^_^<br>好，下面我们来完成Hook imei操作。。</p>
+<p>###③用hook实现获取Hook imei的功能<br><strong>使用Xposed hook的必要配置</strong></p>
+<p>####在AndroidManifest.xml里添加这三项:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--配置为ture，使之成为Xposed模块 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"xposedmodule"</span> <span class="attr">android:value</span>=<span class="string">"ture"</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--模块介绍 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"xposeddescription"</span> <span class="attr">android:value</span>=<span class="string">"Hook imei测试"</span> /&gt;</span></span><br><span class="line"><span class="comment">&lt;!--模块依赖的最低XposedBridgeApi版本 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"xposedminversion"</span> <span class="attr">android:value</span>=<span class="string">"54"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>####添加XposedBridgeApi<br>新建个lib文件夹，拷贝XposedBridgeApi-54.jar到此目录，然后右键点击lib文件夹中的jar文件选择-&gt; add as Library,这个有个坑，添加完之后还要更改一下配置，不然编译的时候会把XposedBridgeApi也编译进去，会导致很多问题，所以要配置一下使之编译的时候不参加编译。<br>Ctrl+Shift+Alt+s快捷键来到Project Structure界面，更改 jar的implementation 为compileOnly：<br><img src="http://img.blog.csdn.net/20180101204622033?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>####添加Hook的入口类<br>新建assetc文件夹，在文件夹下新建xposed_init文件，然后向文件添加入口类信息。如下图：<br><img src="http://img.blog.csdn.net/20180101205029838?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>###实现Hook imie功能<br>新建MianHook，代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.banyan.hook;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.telephony.TelephonyManager;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> de.robv.android.xposed.IXposedHookLoadPackage;</span><br><span class="line"><span class="keyword">import</span> de.robv.android.xposed.XC_MethodHook;</span><br><span class="line"><span class="keyword">import</span> de.robv.android.xposed.XposedHelpers;</span><br><span class="line"><span class="keyword">import</span> de.robv.android.xposed.callbacks.XC_LoadPackage;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by banyan on 2018/1/1.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//实现IXposedHookLoadPackage接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainHook</span> <span class="keyword">implements</span> <span class="title">IXposedHookLoadPackage</span></span>&#123;</span><br><span class="line">    <span class="comment">//执行接口的handleLoadPackage方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleLoadPackage</span><span class="params">(XC_LoadPackage.LoadPackageParam loadPackageParam)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        <span class="comment">/***</span></span><br><span class="line"><span class="comment">         * 用XposedHelpers类的findAndHookMethod方法查找需要hook的方法并进行hook</span></span><br><span class="line"><span class="comment">         * 第一个参数：需要Hook的类</span></span><br><span class="line"><span class="comment">         * 第二个参数：需要Hook的方法</span></span><br><span class="line"><span class="comment">         * 第三个参数：hook到了方法后要进行的操作</span></span><br><span class="line"><span class="comment">         * */</span></span><br><span class="line">        XposedHelpers.findAndHookMethod(TelephonyManager.class, <span class="string">"getDeviceId"</span>, <span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">            <span class="comment">/***</span></span><br><span class="line"><span class="comment">             * 在被Hook的方法执行之前要进行的操作</span></span><br><span class="line"><span class="comment">             * 比如改变参数之类的</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">beforeHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                <span class="keyword">super</span>.beforeHookedMethod(param);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/***</span></span><br><span class="line"><span class="comment">             * 在被Hook的方法执行后要进行的操作</span></span><br><span class="line"><span class="comment">             * 比如改变返回值之类的</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                String primary = (String) param.getResult();</span><br><span class="line">                <span class="comment">//改变被Hook的方法getDeviceId()的返回值</span></span><br><span class="line">                param.setResult(<span class="string">"我是etDeviceId方法，我被Hook了，返回值由"</span> + primary + <span class="string">"改成了：88888888888888"</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>##执行效果图：<br><img src="http://img.blog.csdn.net/20180101213751524?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzk5MDA1MA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>#<strong>结语</strong><br>Hook是种优雅的利器^-^。。</p>
+
+      
+      
+        <div class="page-reward">
+          <p><a href="javascript:void(0)" onclick="dashangToggle()" class="dashang">赏</a></p>
+          <div class="hide_box"></div>
+          <div class="shang_box">
+            <a class="shang_close" href="javascript:void(0)" onclick="dashangToggle()">×</a>
+            <div class="shang_tit">
+              <p>纯属好玩</p>
+            </div>
+            <div class="shang_payimg">
+              <img src="/img/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+            </div>
+              <div class="pay_explain">扫码打赏，你说多少就多少</div>
+            <div class="shang_payselect">
+              
+                <div class="pay_item checked" data-id="alipay">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/alipay.png" alt="支付宝" /></span>
+                </div>
+              
+              
+                <div class="pay_item" data-id="wechat">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/weixin.png" alt="微信" /></span>
+                </div>
+              
+            </div>
+            <div class="shang_info">
+              <p>打开<span id="shang_pay_txt">支付宝</span>扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+        <script type="text/javascript">
+          $(".pay_item").click(function(){
+            $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
+            var dataid=$(this).attr('data-id');
+            $(".shang_payimg img").attr("src","/img/"+dataid+"img.jpg");
+            $("#shang_pay_txt").text(dataid=="alipay"?"支付宝":"微信");
+          });
+          function dashangToggle(){
+            
+            $(".hide_box").fadeToggle();
+            $(".shang_box").fadeToggle();
+          }
+        </script>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/01/01/Android下的Hook初探/">Android下的Hook初探</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Banyan 的个人博客">Banyan</a></p>
+        <p><span>发布时间:</span>2018年01月01日 - 22时04分</p>
+        <p><span>最后更新:</span>2018年01月01日 - 22时06分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/01/Android下的Hook初探/" title="Android下的Hook初探">http://yoursite.com/2018/01/01/Android下的Hook初探/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2018/01/01/Android下的Hook初探/　　作者: Banyan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/2017/12/21/CVE-2017-17562 GoAhea远程代码执行反弹shell姿势/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CVE-2017-17562 GoAhea远程代码执行反弹shell姿势</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1丶Android下的常用Hook框架"><span class="toc-number">1.</span> <span class="toc-text">1丶Android下的常用Hook框架</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#android下的Hook框架有很多，比较出名的就是Xposed和Cydia-Substrate-当然都各有不足，Xposed只能Hook-Java层，面对native层就显得无力了；Substrate和Java层和native层都可以Hook，但作者好像很久没更新了，只能在dalvik上Hook，在android5-0及以上版本就不能用了，而且兼容性也不是很好，在几款模拟器上都没配置成功。"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">android下的Hook框架有很多，比较出名的就是Xposed和Cydia Substrate,当然都各有不足，Xposed只能Hook Java层，面对native层就显得无力了；Substrate和Java层和native层都可以Hook，但作者好像很久没更新了，只能在dalvik上Hook，在android5.0及以上版本就不能用了，而且兼容性也不是很好，在几款模拟器上都没配置成功。</span></a></li></ol></li></ol></li></ol></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="youyan" id="comments">
+  <div id="uyan_frame"></div>
+  <script src="http://v2.uyan.cc/code/uyan.js?uid=2149941"></script>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2017/12/21/CVE-2017-17562 GoAhea远程代码执行反弹shell姿势/" title="下一篇: CVE-2017-17562 GoAhea远程代码执行反弹shell姿势">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/01/01/Android下的Hook初探/">Android下的Hook初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/21/CVE-2017-17562 GoAhea远程代码执行反弹shell姿势/">CVE-2017-17562 GoAhea远程代码执行反弹shell姿势</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/26/XDSEC 西电CTF练习题WriteUp/">XDSEC 西电CTF练习题WriteUp</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2018 Banyan
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >大佬到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
